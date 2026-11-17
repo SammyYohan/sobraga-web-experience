@@ -3,6 +3,7 @@ import { Search, ArrowRight, FileText } from 'lucide-react';
 import { SubpageBanner } from '../components/SubpageBanner';
 import { ProductBottleVisual } from '../components/BrandArtwork';
 import { DocumentItem, SITE_ASSETS } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 import { searchSite } from '../utils/siteLogic';
 
 interface SearchResultsPageProps {
@@ -16,8 +17,9 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
   onNavigate,
   onOpenDocument,
 }) => {
+  const { products, articles, wines, documents } = useSiteData();
   const [localQuery, setLocalQuery] = useState(query);
-  const results = searchSite(query);
+  const results = searchSite(query, { products, articles, wines, documents });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

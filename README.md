@@ -15,6 +15,9 @@ Ce projet réinvente l'expérience utilisateur du site officiel ([sobraga.com](h
   - **Barre déroulante dynamique :** 27 marques et partenaires avec effervescence pétillante aux couleurs officielles au survol et mode grille complet.
 - **🍾 Rendu Vectoriel SVG Haute Définition :**
   - Chaque produit (Régab, Djino, Castel Beer, 33 Export, Andza, Akewa, Jugab, Ferox...) dispose d'un packaging SVG vectoriel dédié, éliminant tout artefact de compression bitmap et garantissant une netteté parfaite sur écrans Retina/4K.
+- **⚡ SOBRAGA Studio (CMS & Back-Office Intégré) :**
+  - **Sans dépendance WordPress :** Espace d'administration sur-mesure `/admin` (Code démo : `sobraga2026`) permettant aux équipes Communication et Marketing de publier des articles, réajuster les prix homologués en direct et gérer les offres d'emploi.
+  - **Synchronisation dynamique :** Persistance temps réel dans le navigateur (`localStorage`) avec outils d'export JSON, import et réinitialisation aux données officielles.
 - **📄 Services Interactifs Intégrés :**
   - **Prix homologués :** Modal d'inspection officiel des tarifs 2026 avec export texte.
   - **Docuthèque & Publications :** Consultation des magazines *La Capsule*, *Ça Décapsule*, *ESBIDJINEWS* et des bilans RSE.

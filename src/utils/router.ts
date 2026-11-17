@@ -15,7 +15,8 @@ export type AppRoute =
   | { name: 'rejoignez-nous' }
   | { name: 'recherche'; query: string }
   | { name: 'mentions-legales' }
-  | { name: 'politique-confidentialite' };
+  | { name: 'politique-confidentialite' }
+  | { name: 'admin'; tab?: string };
 
 export function parseRoute(pathname: string, search: string = ''): AppRoute {
   const cleanPath = pathname.replace(/\/+$/, '') || '/';
@@ -69,6 +70,10 @@ export function parseRoute(pathname: string, search: string = ''): AppRoute {
   if (cleanPath === '/recherche') return { name: 'recherche', query: params.get('q') || params.get('s') || '' };
   if (cleanPath === '/mentions-legales') return { name: 'mentions-legales' };
   if (cleanPath === '/politique-de-confidentialite') return { name: 'politique-confidentialite' };
+  if (cleanPath === '/admin' || cleanPath.startsWith('/admin/')) {
+    const parts = cleanPath.split('/');
+    return { name: 'admin', tab: parts[2] || 'articles' };
+  }
 
   return { name: 'home' };
 }

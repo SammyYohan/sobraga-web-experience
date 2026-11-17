@@ -33,6 +33,8 @@ test('parseRoute resolves all primary and nested routes', () => {
   assert.deepEqual(parseRoute('/', '?s=regab'), { name: 'recherche', query: 'regab' });
   assert.deepEqual(parseRoute('/mentions-legales/'), { name: 'mentions-legales' });
   assert.deepEqual(parseRoute('/politique-de-confidentialite/'), { name: 'politique-confidentialite' });
+  assert.deepEqual(parseRoute('/admin'), { name: 'admin', tab: 'articles' });
+  assert.deepEqual(parseRoute('/admin/prix/'), { name: 'admin', tab: 'prix' });
 });
 
 test('filterProducts returns full catalog and accurately filters categories', () => {

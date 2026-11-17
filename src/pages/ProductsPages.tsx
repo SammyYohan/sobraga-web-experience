@@ -11,10 +11,10 @@ import {
 } from '../components/LiquidEffects';
 import {
   PRODUCT_CATEGORIES,
-  PRODUCTS,
   ProductCategoryId,
   SITE_ASSETS,
 } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 import { filterProducts } from '../utils/siteLogic';
 
 interface ProductsPageProps {
@@ -30,11 +30,12 @@ const getFlavorForCategory = (cat: ProductCategoryId): BubbleFlavor => {
 };
 
 export const ProductsPage: React.FC<ProductsPageProps> = ({ activeCategory, onNavigate }) => {
+  const { products } = useSiteData();
   const validCat = PRODUCT_CATEGORIES.some((c) => c.id === activeCategory)
     ? (activeCategory as ProductCategoryId)
     : 'all';
 
-  const items = filterProducts(validCat);
+  const items = filterProducts(validCat, '', products);
   const bannerFlavor = getFlavorForCategory(validCat);
 
   return (
@@ -127,9 +128,10 @@ interface ProductDetailPageProps {
 }
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug, onNavigate }) => {
-  const product = PRODUCTS.find((p) => p.slug === slug) || PRODUCTS[0];
-  const related = PRODUCTS.filter(
-    (p) => p.category === product.category && p.slug !== product.slug
+  const { products } = useSiteData();
+  const product = products.find((p) => p.slug === slug) || products[0];
+  const related = products.filter(
+    (p) => p.category === product?.category && p.slug !== product?.slug
   ).slice(0, 6);
 
   const productFlavor = getFlavorForCategory(product.category);

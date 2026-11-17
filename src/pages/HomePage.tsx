@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, ArrowRight, Droplets } from 'lucide-react';
 import {
   HERO_SLIDES,
-  NEWS_ARTICLES,
   PRODUCT_CATEGORIES,
   ProductCategoryId,
 } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 import { CategoryPackVisual } from '../components/BrandArtwork';
 import {
   BubbleFlavor,
@@ -33,7 +33,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenPrixHomolo
   const [heroIndex, setHeroIndex] = useState(0);
   const [newsOffset, setNewsOffset] = useState(0);
 
-  const featuredArticles = NEWS_ARTICLES.slice(0, 9);
+  const { articles } = useSiteData();
+  const featuredArticles = articles.slice(0, 9);
 
   useEffect(() => {
     const timer = setInterval(() => {

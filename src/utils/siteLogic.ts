@@ -18,10 +18,14 @@ function foldText(s: string): string {
     .toLowerCase();
 }
 
-export function filterProducts(category: ProductCategoryId | string, query: string = ''): ProductItem[] {
+export function filterProducts(
+  category: ProductCategoryId | string,
+  query: string = '',
+  productList: ProductItem[] = PRODUCTS
+): ProductItem[] {
   const normalizedCat = category && category !== 'all' ? category : 'all';
   const q = foldText(query.trim());
-  return PRODUCTS.filter((p) => {
+  return productList.filter((p) => {
     const matchCat = normalizedCat === 'all' || p.category === normalizedCat;
     const matchQuery =
       !q ||
@@ -33,9 +37,9 @@ export function filterProducts(category: ProductCategoryId | string, query: stri
   });
 }
 
-export function filterWines(category: WineCategoryId | string): WineItem[] {
-  if (!category || category === 'all') return WINES;
-  return WINES.filter((w) => w.category === category);
+export function filterWines(category: WineCategoryId | string, wineList: WineItem[] = WINES): WineItem[] {
+  if (!category || category === 'all') return wineList;
+  return wineList.filter((w) => w.category === category);
 }
 
 export interface SearchResults {
@@ -46,33 +50,46 @@ export interface SearchResults {
   total: number;
 }
 
-export function searchSite(rawQuery: string): SearchResults {
+export function searchSite(
+  rawQuery: string,
+  customData?: {
+    products?: ProductItem[];
+    articles?: NewsArticle[];
+    wines?: WineItem[];
+    documents?: DocumentItem[];
+  }
+): SearchResults {
   const q = foldText(rawQuery.trim());
   if (!q) {
     return { products: [], articles: [], wines: [], documents: [], total: 0 };
   }
-  const products = PRODUCTS.filter(
+  const sourceProducts = customData?.products || PRODUCTS;
+  const sourceArticles = customData?.articles || NEWS_ARTICLES;
+  const sourceWines = customData?.wines || WINES;
+  const sourceDocuments = customData?.documents || DOCUMENTS;
+
+  const products = sourceProducts.filter(
     (p) =>
       foldText(p.name).includes(q) ||
       foldText(p.description).includes(q) ||
       foldText(p.categoryLabel).includes(q) ||
       foldText(p.ingredients).includes(q)
   );
-  const articles = NEWS_ARTICLES.filter(
+  const articles = sourceArticles.filter(
     (a) =>
       foldText(a.title).includes(q) ||
       foldText(a.excerpt).includes(q) ||
       foldText(a.tag).includes(q) ||
       a.paragraphs.some((p) => foldText(p).includes(q))
   );
-  const wines = WINES.filter(
+  const wines = sourceWines.filter(
     (w) =>
       foldText(w.name).includes(q) ||
       foldText(w.appellation).includes(q) ||
       foldText(w.categoryLabel).includes(q) ||
       foldText(w.description).includes(q)
   );
-  const documents = DOCUMENTS.filter(
+  const documents = sourceDocuments.filter(
     (d) =>
       foldText(d.title).includes(q) ||
       foldText(d.summary).includes(q) ||

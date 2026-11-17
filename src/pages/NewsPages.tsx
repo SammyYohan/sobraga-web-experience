@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, Share2, Check } from 'lucide-react';
 import { SubpageBanner } from '../components/SubpageBanner';
-import { NEWS_ARTICLES, SITE_ASSETS } from '../data/siteData';
+import { SITE_ASSETS } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 import { paginateArticles } from '../utils/siteLogic';
 
 interface NewsPageProps {
@@ -10,13 +11,14 @@ interface NewsPageProps {
 }
 
 export const NewsPage: React.FC<NewsPageProps> = ({ page, onNavigate }) => {
+  const { articles } = useSiteData();
   const [selectedTag, setSelectedTag] = useState<string>('ALL');
-  const tags = ['ALL', ...Array.from(new Set(NEWS_ARTICLES.map((a) => a.tag)))];
+  const tags = ['ALL', ...Array.from(new Set(articles.map((a) => a.tag)))];
 
   const filtered =
     selectedTag === 'ALL'
-      ? NEWS_ARTICLES
-      : NEWS_ARTICLES.filter((a) => a.tag === selectedTag);
+      ? articles
+      : articles.filter((a) => a.tag === selectedTag);
 
   const paginated = paginateArticles(filtered, page, 6);
 
@@ -135,10 +137,11 @@ interface ArticleDetailPageProps {
 }
 
 export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ slug, onNavigate }) => {
-  const article = NEWS_ARTICLES.find((a) => a.slug === slug) || NEWS_ARTICLES[0];
+  const { articles } = useSiteData();
+  const article = articles.find((a) => a.slug === slug) || articles[0];
   const [copied, setCopied] = useState(false);
 
-  const related = NEWS_ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 3);
+  const related = articles.filter((a) => a.slug !== article?.slug).slice(0, 3);
 
   const handleCopy = () => {
     const url = window.location.href;

@@ -189,6 +189,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             >
               Politique de confidentialité
             </a>
+            <a
+              href="/admin"
+              onClick={(e) => go(e, '/admin')}
+              className="inline-flex items-center gap-1 text-red-300/80 transition hover:text-white"
+            >
+              <span>Portail Admin</span>
+            </a>
           </div>
         </div>
       </div>

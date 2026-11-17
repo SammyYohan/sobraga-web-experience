@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, MotionConfig, motion, useScroll, useSpring } from 'motion/react';
-import { DOCUMENTS, DocumentItem } from './data/siteData';
+import { DocumentItem } from './data/siteData';
+import { SiteProvider, useSiteData } from './context/SiteContext';
 import { parseRoute, AppRoute } from './utils/router';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -17,10 +18,12 @@ import { RsePage } from './pages/RsePage';
 import { ContactPage, CareersPage } from './pages/FormsPages';
 import { SearchResultsPage } from './pages/SearchResultsPage';
 import { LegalPage } from './pages/LegalPages';
+import { AdminPage } from './pages/AdminPage';
 
 const AGE_STORAGE_KEY = 'sobraga_age_verified_v1';
 
-export default function App() {
+function AppContent() {
+  const { documents } = useSiteData();
   const [route, setRoute] = useState<AppRoute>(() =>
     parseRoute(window.location.pathname, window.location.search)
   );
@@ -50,16 +53,23 @@ export default function App() {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  const navigate = useCallback((path: string) => {
-    if (path === '#prix-homologues') {
-      const prixDoc = DOCUMENTS.find((d) => d.id === 'prix-homologues-lbv') || null;
-      setActiveDocument(prixDoc);
-      return;
-    }
-    window.history.pushState({}, '', path);
-    setRoute(parseRoute(window.location.pathname, window.location.search));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const openPrixHomologues = useCallback(() => {
+    const prixDoc = documents.find((d) => d.id === 'prix-homologues-lbv') || documents[0] || null;
+    setActiveDocument(prixDoc);
+  }, [documents]);
+
+  const navigate = useCallback(
+    (path: string) => {
+      if (path === '#prix-homologues') {
+        openPrixHomologues();
+        return;
+      }
+      window.history.pushState({}, '', path);
+      setRoute(parseRoute(window.location.pathname, window.location.search));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [openPrixHomologues]
+  );
 
   const handleConfirmAge = (remember: boolean) => {
     setAgeVerified(true);
@@ -70,11 +80,6 @@ export default function App() {
         // ignore storage errors
       }
     }
-  };
-
-  const openPrixHomologues = () => {
-    const prixDoc = DOCUMENTS.find((d) => d.id === 'prix-homologues-lbv') || null;
-    setActiveDocument(prixDoc);
   };
 
   const routeKey = JSON.stringify(route);
@@ -151,20 +156,26 @@ export default function App() {
         return <LegalPage kind="mentions" />;
       case 'politique-confidentialite':
         return <LegalPage kind="privacy" />;
+      case 'admin':
+        return <AdminPage initialTab={route.tab} onNavigate={navigate} />;
       default:
         return <HomePage onNavigate={navigate} onOpenPrixHomologues={openPrixHomologues} />;
     }
   };
 
+  const isAdminRoute = route.name === 'admin';
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="flex min-h-screen flex-col bg-white text-[#1a1a1a]">
         {/* Razor-thin top scroll progress indicator */}
-        <motion.div
-          aria-hidden="true"
-          className="fixed inset-x-0 top-0 z-50 h-[2.5px] origin-left bg-gradient-to-r from-[#7D0000] via-[#E11D48] to-[#F59E0B]"
-          style={{ scaleX: smoothProgress }}
-        />
+        {!isAdminRoute && (
+          <motion.div
+            aria-hidden="true"
+            className="fixed inset-x-0 top-0 z-50 h-[2.5px] origin-left bg-gradient-to-r from-[#7D0000] via-[#E11D48] to-[#F59E0B]"
+            style={{ scaleX: smoothProgress }}
+          />
+        )}
 
         {/* Momentary liquid crimson-gold wave sweep on page navigation */}
         <AnimatePresence>
@@ -178,11 +189,13 @@ export default function App() {
           />
         </AnimatePresence>
 
-        <Header
-          currentRoute={route}
-          onNavigate={navigate}
-          onOpenPrixHomologues={openPrixHomologues}
-        />
+        {!isAdminRoute && (
+          <Header
+            currentRoute={route}
+            onNavigate={navigate}
+            onOpenPrixHomologues={openPrixHomologues}
+          />
+        )}
 
         <main className="flex-1">
           <AnimatePresence mode="wait">
@@ -198,12 +211,20 @@ export default function App() {
           </AnimatePresence>
         </main>
 
-        <Footer onNavigate={navigate} />
+        {!isAdminRoute && <Footer onNavigate={navigate} />}
 
-        <AgeGateModal open={!ageVerified} onConfirm={handleConfirmAge} />
+        {!isAdminRoute && <AgeGateModal open={!ageVerified} onConfirm={handleConfirmAge} />}
         <DocumentViewerModal doc={activeDocument} onClose={() => setActiveDocument(null)} />
-        <SupportWidget onNavigate={navigate} />
+        {!isAdminRoute && <SupportWidget onNavigate={navigate} />}
       </div>
     </MotionConfig>
+  );
+}
+
+export default function App() {
+  return (
+    <SiteProvider>
+      <AppContent />
+    </SiteProvider>
   );
 }
