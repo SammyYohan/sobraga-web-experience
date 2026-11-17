@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var own = Object.getOwnPropertyDescriptor(window, 'fetch');
+          var proto = Object.getPrototypeOf(window);
+          var protoDesc = proto ? Object.getOwnPropertyDescriptor(proto, 'fetch') : undefined;
+          var getterOnlyOwn = own && own.get && !own.set && own.configurable;
+          var getterOnlyProto = !own && protoDesc && protoDesc.get && !protoDesc.set;
+          if (getterOnlyOwn || getterOnlyProto) {
+            var origGetter = (own && own.get) || (protoDesc && protoDesc.get);
+            var overrideFetch = null;
+            Object.defineProperty(window, 'fetch', {
+              configurable: true,
+              enumerable: true,
+              get: function () {
+                return overrideFetch || (origGetter ? origGetter.call(window) : undefined);
+              },
+              set: function (fn) {
+                if (typeof fn === 'function') {
+                  overrideFetch = fn;
+                }
+              },
+            });
+          }
+        } catch (_) {
+          // Ignore non-configurable environment descriptors
+        }
+      })();
+    </script>
+    <title>SOBRAGA — Les Boissons du Gabon</title>
+    <meta
+      name="description"
+      content="Site officiel de la Société des Boissons Rafraîchissantes du Gabon (SOBRAGA) : produits, marques, cave à vin, actualités, RSE, docuthèque et recrutement."
+    />
+    <meta property="og:title" content="SOBRAGA — Les Boissons du Gabon" />
+    <meta
+      property="og:description"
+      content="Découvrez l'univers des Boissons du Gabon : bières, boissons gazeuses, eaux minérales, jus de fruits, energy drinks, cave à vin et engagements RSE."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-white text-[#1a1a1a] antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

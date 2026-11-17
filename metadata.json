@@ -1,0 +1,6 @@
+{
+  "name": "SOBRAGA — Les Boissons du Gabon",
+  "description": "Site officiel de la Société des Boissons Rafraîchissantes du Gabon (SOBRAGA) : produits, marques, cave à vin, actualités, RSE, docuthèque et recrutement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

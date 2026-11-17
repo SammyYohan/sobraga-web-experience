@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --sbg-maroon: #7d0000;
+    --sbg-deep: #4e0000;
+    --sbg-red: #9e0b0f;
+    --sbg-red-hover: #b71c1c;
+    --sbg-blush: #fdf6f6;
+    --sbg-charcoal: #202022;
+    --sbg-fb-blue: #3b5998;
+  }
+
+  html {
+    font-family: 'Montserrat', sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #18181b;
+    background-color: #ffffff;
+    overflow-x: clip;
+  }
+}
+
+.font-editorial {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ==========================================================================
+   2026 Liquid Motion & Condensation Animations (GPU compositor-only)
+   ========================================================================== */
+
+@keyframes marqueeScrollLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marqueeScrollRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes dropletFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) scale(1.06);
+    opacity: 0.95;
+  }
+}
+
+@keyframes bubbleRise {
+  0% {
+    transform: translate3d(0, 24px, 0) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.55;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(4px, -96px, 0) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes rippleExpand {
+  0% {
+    transform: scale(0.75);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+@keyframes kenBurnsSlow {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes bubbleRise3D {
+  0% {
+    transform: translate3d(0, 36px, 0) scale(0.65);
+    opacity: 0;
+  }
+  15% {
+    opacity: var(--bubble-opacity, 0.58);
+  }
+  50% {
+    transform: translate3d(var(--bubble-sway, 10px), -70px, 0) scale(0.95);
+    opacity: var(--bubble-opacity, 0.58);
+  }
+  85% {
+    opacity: calc(var(--bubble-opacity, 0.58) * 0.65);
+  }
+  100% {
+    transform: translate3d(calc(var(--bubble-sway, 10px) * -0.6), -190px, 0) scale(1.12);
+    opacity: 0;
+  }
+}
+
+@keyframes headerLiquidSheen {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(200%, 0, 0);
+  }
+}
+
+@keyframes fizzSparkle {
+  0% {
+    transform: translate3d(0, 14px, 0) scale(0.35);
+    opacity: 0;
+  }
+  18% {
+    transform: translate3d(calc(var(--fizz-x, 8px) * 0.3), -6px, 0) scale(1);
+    opacity: 0.96;
+  }
+  68% {
+    transform: translate3d(calc(var(--fizz-x, 8px) * 0.85), -34px, 0) scale(1.06);
+    opacity: 0.86;
+  }
+  100% {
+    transform: translate3d(var(--fizz-x, 8px), -66px, 0) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.animate-marquee-left {
+  animation: marqueeScrollLeft 44s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right {
+  animation: marqueeScrollRight 52s linear infinite;
+  will-change: transform;
+}
+
+.marquee-paused,
+.group\/marquee:hover .animate-marquee-left,
+.group\/marquee:hover .animate-marquee-right,
+.group\/marquee:focus-within .animate-marquee-left,
+.group\/marquee:focus-within .animate-marquee-right {
+  animation-play-state: paused;
+}
+
+.animate-droplet {
+  animation: dropletFloat 4.6s ease-in-out infinite;
+}
+
+.animate-bubble {
+  animation: bubbleRise 6.2s ease-out infinite;
+}
+
+.animate-bubble-3d {
+  animation: bubbleRise3D var(--bubble-duration, 7.5s) cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.animate-fizz-bubble {
+  animation: fizzSparkle var(--fizz-duration, 1.6s) cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.animate-header-sheen {
+  animation: headerLiquidSheen 6.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.animate-ken-burns {
+  animation: kenBurnsSlow 11s ease-out forwards;
+}
+
+.group:hover .group-hover-ripple,
+.liquid-ripple-active {
+  animation: rippleExpand 1.3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Edge gradient fade for horizontal marquees */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 7%,
+    black 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 7%,
+    black 93%,
+    transparent 100%
+  );
+}
+
+/* Wet chilled surface puddle reflection */
+.water-puddle {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(226, 232, 240, 0.36) 38%,
+    rgba(148, 163, 184, 0.14) 68%,
+    transparent 100%
+  );
+}
+
+.water-puddle-dark {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 215, 215, 0.12) 45%,
+    transparent 76%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee-left,
+  .animate-marquee-right,
+  .animate-droplet,
+  .animate-bubble,
+  .animate-bubble-3d,
+  .animate-fizz-bubble,
+  .animate-header-sheen,
+  .animate-ken-burns,
+  .group:hover .group-hover-ripple,
+  .liquid-ripple-active {
+    animation: none !important;
+    transform: none !important;
+  }
+}
