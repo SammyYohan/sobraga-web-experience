@@ -6,6 +6,7 @@ import { useSiteData } from '../context/SiteContext';
 import { validateContactForm } from '../utils/siteLogic';
 
 export const ContactPage: React.FC = () => {
+  const { addContactMessage } = useSiteData();
   const [activeTab, setActiveTab] = useState<'infos' | 'reclamation'>('infos');
   const [civilite, setCivilite] = useState('M.');
   const [nom, setNom] = useState('');
@@ -22,7 +23,17 @@ export const ContactPage: React.FC = () => {
     const res = validateContactForm({ civilite, nom, prenom, email, telephone, message });
     setErrors(res.errors);
     if (!res.valid) return;
-    setSubmittedRef(`SBG-${Math.floor(100000 + Math.random() * 900000)}`);
+    const ref = addContactMessage({
+      type: activeTab,
+      civilite,
+      nom,
+      prenom,
+      email,
+      telephone,
+      produitConcerne: activeTab === 'reclamation' ? produitConcerne : 'Demande générale',
+      message,
+    });
+    setSubmittedRef(ref);
     setNom('');
     setPrenom('');
     setEmail('');
@@ -265,7 +276,7 @@ export const ContactPage: React.FC = () => {
 };
 
 export const CareersPage: React.FC = () => {
-  const { jobOffers } = useSiteData();
+  const { jobOffers, addJobApplication } = useSiteData();
   const activeOffers = jobOffers.filter((o) => o.active);
   const [selectedPoste, setSelectedPoste] = useState<string>('');
   const [civilite, setCivilite] = useState('M.');
@@ -294,6 +305,17 @@ export const CareersPage: React.FC = () => {
     });
     setErrors(res.errors);
     if (!res.valid) return;
+    addJobApplication({
+      jobTitle: selectedPoste || 'Candidature spontanée',
+      civilite,
+      nom,
+      prenom,
+      email,
+      telephone,
+      cvName: cvName || 'CV_Joint.pdf',
+      lettreName: lettreName || 'Lettre_Motivation.pdf',
+      message,
+    });
     setSubmitted(true);
   };
 

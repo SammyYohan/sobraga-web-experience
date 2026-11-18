@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FileText, ShieldCheck, BookOpen, Newspaper } from 'lucide-react';
 import { SubpageBanner } from '../components/SubpageBanner';
-import { DOCUMENTS, DocumentItem, SITE_ASSETS } from '../data/siteData';
+import { DocumentItem, SITE_ASSETS } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 
 interface DocuthequePageProps {
   section: 'engagement-qualite' | 'code-conduite' | 'esbidjinews';
@@ -14,6 +15,7 @@ export const DocuthequePage: React.FC<DocuthequePageProps> = ({
   onNavigate,
   onOpenDocument,
 }) => {
+  const { documents } = useSiteData();
   const [yearFilter, setYearFilter] = useState<string>('ALL');
 
   const meta = {
@@ -34,7 +36,7 @@ export const DocuthequePage: React.FC<DocuthequePageProps> = ({
     },
   }[section];
 
-  const docs = DOCUMENTS.filter((d) => d.category === section);
+  const docs = documents.filter((d) => d.category === section);
   const years = ['ALL', ...Array.from(new Set(docs.map((d) => d.year)))];
   const filteredDocs =
     yearFilter === 'ALL' ? docs : docs.filter((d) => d.year === yearFilter);

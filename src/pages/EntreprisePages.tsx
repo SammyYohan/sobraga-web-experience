@@ -9,12 +9,12 @@ import {
 import {
   COMPANY_STATS,
   COMPANY_VALUES,
-  DOCUMENTS,
   DocumentItem,
   PRODUCTION_SITES,
   PRODUCTION_STEPS,
   SITE_ASSETS,
 } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 
 interface EntreprisePageProps {
   section: 'mot-dg' | 'notre-histoire' | 'nos-valeurs' | 'capsules';
@@ -34,9 +34,10 @@ export const EntreprisePages: React.FC<EntreprisePageProps> = ({
   onNavigate,
   onOpenDocument,
 }) => {
+  const { documents } = useSiteData();
   const [selectedSiteCity, setSelectedSiteCity] = useState<string>(PRODUCTION_SITES[0]?.city || '');
   const [selectedStep, setSelectedStep] = useState<string>(PRODUCTION_STEPS[0]?.step || '1');
-  const capsules = DOCUMENTS.filter((d) => d.category === 'capsule');
+  const capsules = documents.filter((d) => d.category === 'capsule');
 
   const bannerConfig = {
     'mot-dg': { title: 'Mot du Directeur Général', subtitle: 'Entreprise', image: SITE_ASSETS.heroProduction },

@@ -7,13 +7,12 @@ import {
   EditorialTextReveal,
 } from '../components/LiquidEffects';
 import {
-  DOCUMENTS,
   DocumentItem,
-  NEWS_ARTICLES,
   RSE_ODDS,
   RSE_PILLARS,
   SITE_ASSETS,
 } from '../data/siteData';
+import { useSiteData } from '../context/SiteContext';
 
 interface RsePageProps {
   onNavigate: (path: string) => void;
@@ -32,12 +31,13 @@ const ODD_ACTIONS: Record<string, string> = {
 };
 
 export const RsePage: React.FC<RsePageProps> = ({ onNavigate, onOpenDocument }) => {
+  const { articles, documents } = useSiteData();
   const [pillarIdx, setPillarIdx] = useState(0);
   const [selectedOddCode, setSelectedOddCode] = useState<string>('ODD 6');
 
   const activePillar = RSE_PILLARS[pillarIdx];
-  const rseArticles = NEWS_ARTICLES.filter((a) => a.isRse).slice(0, 4);
-  const rseReports = DOCUMENTS.filter((d) => d.category === 'rse');
+  const rseArticles = articles.filter((a) => a.isRse || a.tag.toUpperCase().includes('RSE')).slice(0, 4);
+  const rseReports = documents.filter((d) => d.category === 'rse');
   const activeOdd = RSE_ODDS.find((o) => o.code === selectedOddCode) || RSE_ODDS[0];
 
   return (
